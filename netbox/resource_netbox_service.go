@@ -33,7 +33,7 @@ func resourceNetboxService() *schema.Resource {
 			},
 			"virtual_machine_id": {
 				Type:         schema.TypeInt,
-				Required:     true,
+				Optional:     true,
 				ExactlyOneOf: []string{"virtual_machine_id", "device_id"},
 			},
 			"protocol": {
@@ -116,10 +116,9 @@ func resourceNetboxServiceCreate(d *schema.ResourceData, m interface{}) error {
 		data.VirtualMachine = &dataVirtualMachineID
 	}
 
-	if v, ok := d.GetOk("tags"); ok {
-		tags, _ := getNestedTagListFromResourceDataSet(api, v)
-		data.Tags = tags
-	}
+	v, ok := d.GetOk("tags")
+	tags, _ := getNestedTagListFromResourceDataSet(api, v)
+	data.Tags = tags
 
 	if v, ok := d.GetOk("description"); ok {
 		data.Description = v.(string)
@@ -221,10 +220,9 @@ func resourceNetboxServiceUpdate(d *schema.ResourceData, m interface{}) error {
 
 	data.Ipaddresses = []int64{}
 
-	if v, ok := d.GetOk("tags"); ok {
-		tags, _ := getNestedTagListFromResourceDataSet(api, v)
-		data.Tags = tags
-	}
+	v, ok := d.GetOk("tags")
+	tags, _ := getNestedTagListFromResourceDataSet(api, v)
+	data.Tags = tags
 
 	if v, ok := d.GetOk("description"); ok {
 		data.Description = v.(string)
